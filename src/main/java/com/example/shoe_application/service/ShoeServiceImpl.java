@@ -4,7 +4,7 @@ import com.example.shoe_application.data.models.Shoe;
 import com.example.shoe_application.data.payloads.request.ShoeRequest;
 import com.example.shoe_application.data.payloads.response.MessageResponse;
 import com.example.shoe_application.data.repository.ShoeRepository;
-import com.example.shoe_application.ShoeApplication.*;
+import com.example.shoe_application.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmployeeServiceImpl implements ShoeService {
+public class ShoeServiceImpl implements ShoeService {
 
     @Autowired
     ShoeRepository shoeRepository;
@@ -46,19 +46,20 @@ public class EmployeeServiceImpl implements ShoeService {
 
     @Override
     public void deleteShoe(Integer shoeId) {
-        if (shoeRepository.getById(shoeId).getId().equals(shoeId)){
+        if (shoeRepository.getReferenceById(shoeId).getId().equals(shoeId)){
             shoeRepository.deleteById(shoeId);
         }
-        else throw new ResourceNotFoundException("Employee", "id", employeeId);
+        else throw new ResourceNotFoundException("Employee", "id", shoeId);
     }
 
     @Override
     public Shoe getASingleShoe(Integer shoeId) {
-        return null;
+        return shoeRepository.findById(shoeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Shoe", "id", shoeId));
     }
 
     @Override
     public List<Shoe> getAllShoe() {
-        return null;
+        return shoeRepository.findAll();
     }
 }
