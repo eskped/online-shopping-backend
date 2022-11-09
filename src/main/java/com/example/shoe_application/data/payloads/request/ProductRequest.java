@@ -7,24 +7,23 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class ShoeRequest {
+public class ProductRequest {
     @NotBlank
     @NotNull
-    private String model;
+    private String brand;
     @NotBlank
     @NotNull
     private double price;
     @NotNull
     @NotBlank
-    @Enumerated(EnumType.STRING)
-    private Products products;
+    private Integer unitsInStock;
 
-    public String getModel() {
-        return model;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public double getPrice() {
@@ -35,11 +34,11 @@ public class ShoeRequest {
         this.price = price;
     }
 
-    public Products getProducts() {
-        return products;
+    public Integer getUnitsInStock() {
+        return unitsInStock;
     }
 
-    public void setProducts(Products products) {
-        this.products = products;
+    public void setUnitsInStock(Integer unitsInStock) {
+        this.unitsInStock = unitsInStock;
     }
 }
