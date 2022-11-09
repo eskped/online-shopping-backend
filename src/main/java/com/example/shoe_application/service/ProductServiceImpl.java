@@ -31,31 +31,31 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<Product> updateProduct(Integer productId, ProductRequest productRequest) throws ResourceNotFoundException {
-        Optional<Product> shoe = productRepository.findById(productId);
-        if (shoe.isEmpty()){
-            throw new ResourceNotFoundException("Shoe", "id", productId);
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isEmpty()){
+            throw new ResourceNotFoundException("product", "id", productId);
         }
         else {
-            shoe.get().setBrand(productRequest.getBrand());
-            shoe.get().setPrice(productRequest.getPrice());
-            shoe.get().setUnitsInStock(productRequest.getUnitsInStock());
-            productRepository.save(shoe.get());
+            product.get().setBrand(productRequest.getBrand());
+            product.get().setPrice(productRequest.getPrice());
+            product.get().setUnitsInStock(productRequest.getUnitsInStock());
+            productRepository.save(product.get());
         }
-        return shoe;
+        return product;
     }
 
     @Override
-    public void deleteProduct(Integer productId) {
+    public void deleteProduct(Integer productId) throws ResourceNotFoundException {
         if (productRepository.getReferenceById(productId).getId().equals(productId)){
             productRepository.deleteById(productId);
         }
-        else throw new ResourceNotFoundException("Employee", "id", productId);
+        else throw new ResourceNotFoundException("Product", "id", productId);
     }
 
     @Override
     public Product getASingleProduct(Integer productId) {
         return productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Shoe", "id", productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
     }
 
     @Override

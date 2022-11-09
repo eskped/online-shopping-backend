@@ -1,9 +1,5 @@
 package com.example.shoe_application.data.payloads.request;
 
-import com.example.shoe_application.data.models.Products;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
