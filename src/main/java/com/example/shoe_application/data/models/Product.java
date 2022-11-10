@@ -20,6 +20,7 @@ public class Product {
     private String brand;
     private Integer unitsInStock;
 
+    // relationship to sale
     @ManyToMany(fetch = FetchType.LAZY,
         cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "product_sale",
@@ -37,11 +38,6 @@ public class Product {
 
     public Set<Sale> getSales() {
         return sales;
-    }
-
-    public void setSales(Set<Sale> sales, Sale sale) {
-        this.sales = sales;
-        sale.getProducts().add(this);
     }
 
     public void addToSale(Sale sale) {

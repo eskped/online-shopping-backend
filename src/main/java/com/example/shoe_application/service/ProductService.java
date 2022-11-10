@@ -18,12 +18,8 @@ public interface ProductService {
     void deleteProduct(Integer shoeId);
     Product getASingleProduct(Integer shoeId);
     List<Product> getAllProducts();
-
     List<Product> getAllProductsBySaleId(Integer saleId);
-
     List<Sale> getAllSalesByProductId(Integer productId);
-
     Product addProductToSale(Integer productId, SaleRequest saleRequest) throws ResourceNotFoundException;
-
     List<Sale> getAllSales();
 }

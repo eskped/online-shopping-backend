@@ -26,6 +26,7 @@ public class Customer {
     }
 
     public void addSale(Sale sale) {
+        // assumes sales only have relationship to customer thorugh app
         if (this.salesDone.size() % 3 == 0) {
             sale.setTotalPrice(sale.getTotalPrice() - 750);
         }
