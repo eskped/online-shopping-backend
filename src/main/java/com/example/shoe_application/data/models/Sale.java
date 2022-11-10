@@ -1,61 +1,63 @@
 package com.example.shoe_application.data.models;
 
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Entity
+@Entity(name = "Sale")
+@Table(name = "sale")
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Integer id;
     private double totalPrice;
-
-    // maps product id to number of product sold
-    @Type( type = "json" )
-    private HashMap<Product, Integer> products;
     private LocalDateTime dateCreated;
     private LocalDateTime dateUpdated;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Customer customer;
+    @ManyToMany(fetch = FetchType.LAZY,
+    cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "sale")
+    private Set<Product> products = new HashSet<>();
 
-    public Sale() {
-    }
-
-
-
-    public Sale(HashMap<Product, Integer> products) {
-        this.products = products;
-    }
+    public Sale() {}
 
     public Integer getId() {
         return id;
     }
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
     public double getTotalPrice() {
         return totalPrice;
     }
 
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
 
-    public void removeProduct(Product product, Integer count) {
-        if (products.containsKey(product)) {
-            products.put(product, products.get(product) - count);
-        } else {
-            products.put(product, count);
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
+    public void removeProduct(Integer productId) {
+        Optional<Product> product = this.products.stream()
+                .filter((p) -> Objects.equals(p.getId(), productId)).findFirst();
+        if (product.isPresent()) {
+            this.products.remove(product.get());
+            product.get().getSales().remove(this);
         }
+    }
+
+    public Set<Product> getProducts() {
+        return products;
     }
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
-    public HashMap<Product, Integer> getProducts() {
-        return products;
-    }
-
-    public void setProducts(HashMap<Product, Integer> products) {
-        this.products = products;
-    }
 
     public LocalDateTime getDateCreated() {
         return dateCreated;

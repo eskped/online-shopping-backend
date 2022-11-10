@@ -1,9 +1,16 @@
 package com.example.shoe_application.data.models;
 
+import com.example.shoe_application.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 
 @Entity // tells spring to save to db
+@Table(name = "product")
 public class Product {
 
     @Id // primary key in db
@@ -13,12 +20,45 @@ public class Product {
     private String brand;
     private Integer unitsInStock;
 
+    @ManyToMany(fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "product_sale",
+            joinColumns = { @JoinColumn(name = "product_id") },
+            inverseJoinColumns = { @JoinColumn(name = "sale_id") })
+    @JsonIgnore
+    private Set<Sale> sales = new HashSet<>();
+
 
     public Product(){}
 
     public Integer getId() {
         return id;
     }
+
+    public Set<Sale> getSales() {
+        return sales;
+    }
+
+    public void setSales(Set<Sale> sales, Sale sale) {
+        this.sales = sales;
+        sale.getProducts().add(this);
+    }
+
+    public void addToSale(Sale sale) {
+        this.sales.add(sale);
+        sale.getProducts().add(this);
+    }
+
+    public void removeSale(Integer saleId) throws ResourceNotFoundException {
+        Sale sale = this.sales.stream()
+                .filter(s -> Objects.equals(s.getId(), saleId)).findFirst()
+                .orElseThrow();
+
+        this.sales.remove(sale);
+        sale.getProducts().remove(this);
+
+    }
+
     public double getPrice() {
         return price;
     }
